@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sawyer's Drink Co. - POS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-[#F5F0E1] text-[#1A2B4C] min-h-screen font-sans">
+
+  <!-- Header with Brand Logo -->
+  <header class="bg-[#1A2B4C] text-[#F5F0E1] p-4 shadow-lg flex justify-between items-center border-b-4 border-[#E0A02E]">
+    <div class="flex items-center gap-3">
+      <img src="logo.png" alt="Sawyer's Logo" class="h-12 w-12 rounded-full border-2 border-[#E0A02E] object-cover">
+      <div>
+        <h1 class="text-xl font-bold tracking-wide">SAWYER'S DRINK CO.</h1>
+        <p class="text-xs text-[#E0A02E] uppercase font-semibold">Lemonade & Milkshakes • Register</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-xl mx-auto p-6">
+    <div class="bg-white rounded-2xl border-2 border-[#1A2B4C] shadow-xl p-6">
+      <h2 class="text-xl font-bold mb-4 text-center border-b pb-2">New Customer Order</h2>
+      
+      <form id="posForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold mb-1">Customer Name</label>
+          <input type="text" id="customerName" required placeholder="Name" class="w-full border-2 border-[#1A2B4C] rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#E0A02E]">
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold mb-1">Customer Email (Receipt)</label>
+          <input type="email" id="customerEmail" required placeholder="email@example.com" class="w-full border-2 border-[#1A2B4C] rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#E0A02E]">
+        </div>
+
+        <!-- Drink Category: Lemonade -->
+        <div>
+          <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Lemonade Options</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="selectDrink('Plain Lemonade')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Lemonade</button>
+            <button type="button" onclick="selectDrink('Strawberry Lemonade')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Lemonade</button>
+            <button type="button" onclick="selectDrink('Plain Slushie')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Slushie</button>
+            <button type="button" onclick="selectDrink('Strawberry Slushie')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Slushie</button>
+          </div>
+        </div>
+
+        <!-- Drink Category: Milkshake -->
+        <div>
+          <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Milkshake Options</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="selectDrink('Vanilla Milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Vanilla Milkshake</button>
+            <button type="button" onclick="selectDrink('Chocolate Milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Chocolate Milkshake</button>
+          </div>
+        </div>
+
+        <!-- Size Selection -->
+        <div>
+          <label class="block text-sm font-bold mb-1">Size</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectSize('Small')" class="size-btn p-2 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1]">Small</button>
+            <button type="button" onclick="selectSize('Medium')" class="size-btn p-2 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] bg-[#1A2B4C] text-[#F5F0E1]">Medium</button>
+            <button type="button" onclick="selectSize('Large')" class="size-btn p-2 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1]">Large</button>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-[#E0A02E] hover:bg-[#c88d22] text-[#1A2B4C] font-extrabold py-3 rounded-xl border-2 border-[#1A2B4C] shadow-md transition">
+          Submit Order to Kitchen
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Paste your Firebase Config keys here
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let chosenDrink = '';
+    let chosenSize = 'Medium';
+
+    function selectDrink(drink) {
+      chosenDrink = drink;
+      document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
+      event.target.classList.add('bg-[#1A2B4C]', 'text-[#F5F0E1]');
+    }
+
+    function selectSize(size) {
+      chosenSize = size;
+      document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
+      event.target.classList.add('bg-[#1A2B4C]', 'text-[#F5F0E1]');
+    }
+
+    document.getElementById('posForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!chosenDrink) { alert('Please select a drink!'); return; }
+
+      // Get next order number
+      const ordersRef = db.collection('orders');
+      const snapshot = await ordersRef.orderBy('orderNumber', 'desc').limit(1).get();
+      let lastNum = 100;
+      if (!snapshot.empty) {
+        lastNum = snapshot.docs[0].data().orderNumber || 100;
+      }
+
+      await ordersRef.add({
+        orderNumber: lastNum + 1,
+        customerName: document.getElementById('customerName').value,
+        customerEmail: document.getElementById('customerEmail').value,
+        drink: chosenDrink,
+        size: chosenSize,
+        status: 'Pending',
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      alert(`Order #${lastNum + 1} sent to Kitchen!`);
+      document.getElementById('posForm').reset();
+      chosenDrink = '';
+      document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
+    });
+  </script>
+</body>
+</html>
