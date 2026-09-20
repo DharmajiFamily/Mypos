@@ -71,22 +71,20 @@
   </div>
 
   <script>
-    // Set your Kitchen Access PIN or Password here
+    // Staff Password (Default is 1234)
     const KITCHEN_PIN = "1234"; 
 
-    // Firebase Configuration
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
+      apiKey: "AIzaSyBI4nMVadDvkUD3lhvwkeIEjWO2vhZQV3M",
+      authDomain: "pos-app-7c542.firebaseapp.com",
+      projectId: "pos-app-7c542",
+      storageBucket: "pos-app-7c542.firebasestorage.app",
+      messagingSenderId: "616852048734",
+      appId: "1:616852048734:web:09841b675861276d429dcf"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Check if unlocked previously in this session
     if (sessionStorage.getItem('kds_unlocked') === 'true') {
       showKitchen();
     }
@@ -119,7 +117,7 @@
     function initLiveOrders() {
       db.collection('orders')
         .where('status', '==', 'Pending')
-        .orderBy('timestamp', 'asc') // Oldest orders first
+        .orderBy('timestamp', 'asc')
         .onSnapshot((snapshot) => {
           const container = document.getElementById('ordersContainer');
           if (snapshot.empty) {
@@ -128,20 +126,17 @@
           }
 
           let html = '';
-          let isFirst = true; // Tracks the oldest pending order
+          let isFirst = true;
 
           snapshot.forEach((doc) => {
             const data = doc.data();
 
             if (isFirst) {
-              // Oldest pending order (Highlighted as URGENT)
               html += `
                 <div class="urgent-card bg-[#F5F0E1] text-[#1A2B4C] rounded-2xl border-4 p-5 shadow-2xl flex flex-col justify-between relative">
-                  <!-- Priority Badge -->
                   <div class="absolute -top-3 right-4 bg-red-600 text-white font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                     ⚠️ PRIORITY / OLDEST
                   </div>
-
                   <div>
                     <div class="flex justify-between items-center mb-2 mt-1">
                       <span class="text-4xl font-black text-red-600">#${data.orderNumber}</span>
@@ -152,15 +147,13 @@
                       <p class="text-2xl font-black text-white">${data.size} - ${data.drink}</p>
                     </div>
                   </div>
-
                   <button onclick="completeOrder('${doc.id}')" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-xl border-2 border-[#1A2B4C] transition text-lg shadow-lg">
                     ✓ Complete Priority Order
                   </button>
                 </div>
               `;
-              isFirst = false; // Next orders will render normally
+              isFirst = false;
             } else {
-              // Standard pending orders
               html += `
                 <div class="bg-[#F5F0E1] text-[#1A2B4C] rounded-2xl border-4 border-[#E0A02E] p-5 shadow-2xl flex flex-col justify-between">
                   <div>
@@ -190,4 +183,3 @@
   </script>
 </body>
 </html>
-
