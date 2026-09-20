@@ -127,11 +127,11 @@
           let html = '';
           let isFirst = true;
 
-          // Client-side sorting so it doesn't require extra Firebase indexes
           const docs = snapshot.docs.sort((a, b) => (a.data().timestamp || 0) - (b.data().timestamp || 0));
 
           docs.forEach((doc) => {
             const data = doc.data();
+            const orderPrice = data.price || '$0.00';
 
             if (isFirst) {
               html += `
@@ -142,7 +142,10 @@
                   <div>
                     <div class="flex justify-between items-center mb-2 mt-1">
                       <span class="text-4xl font-black text-red-600">#${data.orderNumber}</span>
-                      <span class="text-xs bg-[#1A2B4C] text-[#F5F0E1] px-2 py-1 rounded-md font-bold">${data.customerName}</span>
+                      <div class="text-right">
+                        <span class="block text-xs bg-[#1A2B4C] text-[#F5F0E1] px-2 py-1 rounded-md font-bold mb-1">${data.customerName}</span>
+                        <span class="text-sm font-black text-green-700">${orderPrice}</span>
+                      </div>
                     </div>
                     <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl mb-4 border-2 border-red-500">
                       <p class="text-xs font-semibold text-red-400 uppercase">Drink Item (Make Next)</p>
@@ -161,7 +164,10 @@
                   <div>
                     <div class="flex justify-between items-center mb-2">
                       <span class="text-3xl font-black text-[#1A2B4C]">#${data.orderNumber}</span>
-                      <span class="text-xs bg-[#1A2B4C] text-[#F5F0E1] px-2 py-1 rounded-md font-bold">${data.customerName}</span>
+                      <div class="text-right">
+                        <span class="block text-xs bg-[#1A2B4C] text-[#F5F0E1] px-2 py-1 rounded-md font-bold mb-1">${data.customerName}</span>
+                        <span class="text-sm font-black text-green-700">${orderPrice}</span>
+                      </div>
                     </div>
                     <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl mb-4 border-2 border-[#E0A02E]">
                       <p class="text-xs font-semibold text-[#E0A02E] uppercase">Drink Item</p>
@@ -185,3 +191,4 @@
   </script>
 </body>
 </html>
+
