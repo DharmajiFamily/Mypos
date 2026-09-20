@@ -45,8 +45,8 @@
           <div class="grid grid-cols-2 gap-2">
             <button type="button" onclick="selectDrink('Plain Lemonade', 'lemonade_regular')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Lemonade</button>
             <button type="button" onclick="selectDrink('Strawberry Lemonade', 'lemonade_strawberry')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Lemonade</button>
-            <button type="button" onclick="selectDrink('Plain Slushie', 'lemonade_regular')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Slushie</button>
-            <button type="button" onclick="selectDrink('Strawberry Slushie', 'lemonade_strawberry')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Slushie</button>
+            <button type="button" onclick="selectDrink('Plain Slushie', 'slushie_regular')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Slushie</button>
+            <button type="button" onclick="selectDrink('Strawberry Slushie', 'slushie_strawberry')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Slushie</button>
           </div>
         </div>
 
@@ -54,9 +54,9 @@
         <div>
           <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Milkshakes</p>
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectDrink('Vanilla Milkshake', 'milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Vanilla</button>
-            <button type="button" onclick="selectDrink('Chocolate Milkshake', 'milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Chocolate</button>
-            <button type="button" onclick="selectDrink('Strawberry Milkshake', 'milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Strawberry</button>
+            <button type="button" onclick="selectDrink('Vanilla Milkshake', 'milkshake_vanilla')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Vanilla</button>
+            <button type="button" onclick="selectDrink('Chocolate Milkshake', 'milkshake_chocolate')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Chocolate</button>
+            <button type="button" onclick="selectDrink('Strawberry Milkshake', 'milkshake_strawberry')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Strawberry</button>
           </div>
         </div>
 
@@ -77,7 +77,7 @@
         </div>
 
         <button type="submit" id="submitBtn" class="w-full bg-[#E0A02E] hover:bg-[#c88d22] text-[#1A2B4C] font-extrabold py-3 rounded-xl border-2 border-[#1A2B4C] shadow-md transition">
-          Submit Order & Send Receipt
+          Submit Order & Send Email Receipt
         </button>
       </form>
     </div>
@@ -107,11 +107,14 @@
     let drinkType = '';
     let chosenSize = 'Medium';
 
-    // Pricing Structure
     const PRICE_MAP = {
       lemonade_regular: { Small: 1.00, Medium: 1.75, Large: 4.00 },
       lemonade_strawberry: { Small: 1.50, Medium: 2.00, Large: 4.50 },
-      milkshake: { Small: 3.50, Medium: 4.50, Large: 5.50 }
+      slushie_regular: { Small: 1.25, Medium: 2.00, Large: 4.25 },
+      slushie_strawberry: { Small: 1.75, Medium: 2.25, Large: 4.75 },
+      milkshake_vanilla: { Small: 2.00, Medium: 1.75, Large: 5.00 },
+      milkshake_chocolate: { Small: 2.25, Medium: 3.00, Large: 5.25 },
+      milkshake_strawberry: { Small: 2.50, Medium: 3.25, Large: 5.50 }
     };
 
     function calculatePrice() {
@@ -171,7 +174,7 @@
           timestamp: Date.now()
         });
 
-        // Send Email Receipt via EmailJS
+        // Send Full Detailed Email Receipt via EmailJS
         if (EMAILJS_PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
             to_email: customerEmail,
@@ -181,7 +184,7 @@
             drink_size: chosenSize,
             total_price: `$${totalPrice}`
           });
-          alert(`Order #${nextNum} ($${totalPrice}) sent to Kitchen & Email Receipt Sent!`);
+          alert(`Order #${nextNum} ($${totalPrice}) sent to Kitchen & Detailed Email Sent!`);
         } else {
           alert(`Order #${nextNum} ($${totalPrice}) sent to Kitchen!`);
         }
@@ -195,10 +198,11 @@
         alert('Error submitting order. Check browser console.');
         console.error(err);
       } finally {
-        submitBtn.innerText = "Submit Order & Send Receipt";
+        submitBtn.innerText = "Submit Order & Send Email Receipt";
         submitBtn.disabled = false;
       }
     });
   </script>
 </body>
 </html>
+
