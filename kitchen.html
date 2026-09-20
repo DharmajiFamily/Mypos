@@ -114,6 +114,13 @@
       initLiveOrders();
     }
 
+    // Function to handle Niimbot label printing (Only copies the order number to clipboard/print buffer)
+    function printNiimbotLabel(orderNum) {
+      const orderText = `#${orderNum}`;
+      navigator.clipboard.writeText(orderText);
+      alert(`Order Number ${orderText} copied to clipboard! Paste it directly into the Niimbot App to print.`);
+    }
+
     function initLiveOrders() {
       db.collection('orders')
         .where('status', '==', 'Pending')
@@ -147,14 +154,19 @@
                         <span class="text-sm font-black text-green-700">${orderPrice}</span>
                       </div>
                     </div>
-                    <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl mb-4 border-2 border-red-500">
+                    <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl mb-3 border-2 border-red-500">
                       <p class="text-xs font-semibold text-red-400 uppercase">Drink Item (Make Next)</p>
                       <p class="text-2xl font-black text-white">${data.size} - ${data.drink}</p>
                     </div>
                   </div>
-                  <button onclick="completeOrder('${doc.id}')" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-xl border-2 border-[#1A2B4C] transition text-lg shadow-lg">
-                    ✓ Complete Priority Order
-                  </button>
+                  <div class="space-y-2">
+                    <button onclick="printNiimbotLabel('${data.orderNumber}')" class="w-full bg-[#1A2B4C] hover:bg-[#0e192e] text-[#F5F0E1] font-bold py-2 rounded-xl border border-[#E0A02E] transition text-sm">
+                      🖨️ Print Order #${data.orderNumber} for Niimbot
+                    </button>
+                    <button onclick="completeOrder('${doc.id}')" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-xl border-2 border-[#1A2B4C] transition text-lg shadow-lg">
+                      ✓ Complete Priority Order
+                    </button>
+                  </div>
                 </div>
               `;
               isFirst = false;
@@ -169,14 +181,19 @@
                         <span class="text-sm font-black text-green-700">${orderPrice}</span>
                       </div>
                     </div>
-                    <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl mb-4 border-2 border-[#E0A02E]">
+                    <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl mb-3 border-2 border-[#E0A02E]">
                       <p class="text-xs font-semibold text-[#E0A02E] uppercase">Drink Item</p>
                       <p class="text-xl font-extrabold">${data.size} - ${data.drink}</p>
                     </div>
                   </div>
-                  <button onclick="completeOrder('${doc.id}')" class="w-full bg-[#E0A02E] hover:bg-[#c88d22] text-[#1A2B4C] font-extrabold py-3 rounded-xl border-2 border-[#1A2B4C] transition">
-                    ✓ Finish & Bump Order
-                  </button>
+                  <div class="space-y-2">
+                    <button onclick="printNiimbotLabel('${data.orderNumber}')" class="w-full bg-[#1A2B4C] hover:bg-[#0e192e] text-[#F5F0E1] font-bold py-2 rounded-xl border border-[#E0A02E] transition text-sm">
+                      🖨️ Print Order #${data.orderNumber} for Niimbot
+                    </button>
+                    <button onclick="completeOrder('${doc.id}')" class="w-full bg-[#E0A02E] hover:bg-[#c88d22] text-[#1A2B4C] font-extrabold py-3 rounded-xl border-2 border-[#1A2B4C] transition">
+                      ✓ Finish & Bump Order
+                    </button>
+                  </div>
                 </div>
               `;
             }
