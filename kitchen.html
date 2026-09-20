@@ -117,7 +117,6 @@
     function initLiveOrders() {
       db.collection('orders')
         .where('status', '==', 'Pending')
-        .orderBy('timestamp', 'asc')
         .onSnapshot((snapshot) => {
           const container = document.getElementById('ordersContainer');
           if (snapshot.empty) {
@@ -128,7 +127,10 @@
           let html = '';
           let isFirst = true;
 
-          snapshot.forEach((doc) => {
+          // Client-side sorting so it doesn't require extra Firebase indexes
+          const docs = snapshot.docs.sort((a, b) => (a.data().timestamp || 0) - (b.data().timestamp || 0));
+
+          docs.forEach((doc) => {
             const data = doc.data();
 
             if (isFirst) {
