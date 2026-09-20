@@ -8,6 +8,8 @@
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body class="bg-[#F5F0E1] text-[#1A2B4C] min-h-screen font-sans">
 
@@ -37,29 +39,30 @@
           <input type="email" id="customerEmail" required placeholder="email@example.com" class="w-full border-2 border-[#1A2B4C] rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#E0A02E]">
         </div>
 
-        <!-- Drink Category: Lemonade -->
+        <!-- Drink Category: Lemonade & Slushies -->
         <div>
-          <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Lemonade Options</p>
+          <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Lemonades & Slushies</p>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="selectDrink('Plain Lemonade')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Lemonade</button>
-            <button type="button" onclick="selectDrink('Strawberry Lemonade')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Lemonade</button>
-            <button type="button" onclick="selectDrink('Plain Slushie')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Slushie</button>
-            <button type="button" onclick="selectDrink('Strawberry Slushie')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Slushie</button>
+            <button type="button" onclick="selectDrink('Plain Lemonade', 'lemonade_regular')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Lemonade</button>
+            <button type="button" onclick="selectDrink('Strawberry Lemonade', 'lemonade_strawberry')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Lemonade</button>
+            <button type="button" onclick="selectDrink('Plain Slushie', 'lemonade_regular')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Plain Slushie</button>
+            <button type="button" onclick="selectDrink('Strawberry Slushie', 'lemonade_strawberry')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Strawberry Slushie</button>
           </div>
         </div>
 
         <!-- Drink Category: Milkshake -->
         <div>
-          <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Milkshake Options</p>
-          <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="selectDrink('Vanilla Milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Vanilla Milkshake</button>
-            <button type="button" onclick="selectDrink('Chocolate Milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition">Chocolate Milkshake</button>
+          <p class="text-xs font-bold text-[#E0A02E] uppercase tracking-wider mb-1">Milkshakes</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectDrink('Vanilla Milkshake', 'milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Vanilla</button>
+            <button type="button" onclick="selectDrink('Chocolate Milkshake', 'milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Chocolate</button>
+            <button type="button" onclick="selectDrink('Strawberry Milkshake', 'milkshake')" class="drink-btn p-3 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] transition text-sm">Strawberry</button>
           </div>
         </div>
 
         <!-- Size Selection -->
         <div>
-          <label class="block text-sm font-bold mb-1">Size</label>
+          <label class="block text-sm font-bold mb-1">Select Size</label>
           <div class="grid grid-cols-3 gap-2">
             <button type="button" onclick="selectSize('Small')" class="size-btn p-2 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1]">Small</button>
             <button type="button" onclick="selectSize('Medium')" class="size-btn p-2 border-2 border-[#1A2B4C] rounded-lg font-bold hover:bg-[#1A2B4C] hover:text-[#F5F0E1] bg-[#1A2B4C] text-[#F5F0E1]">Medium</button>
@@ -67,14 +70,28 @@
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-[#E0A02E] hover:bg-[#c88d22] text-[#1A2B4C] font-extrabold py-3 rounded-xl border-2 border-[#1A2B4C] shadow-md transition">
-          Submit Order to Kitchen
+        <!-- Total Price Display -->
+        <div class="bg-[#1A2B4C] text-[#F5F0E1] p-4 rounded-xl flex justify-between items-center font-bold text-lg">
+          <span>Total Price:</span>
+          <span id="priceDisplay" class="text-2xl text-[#E0A02E]">$0.00</span>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-[#E0A02E] hover:bg-[#c88d22] text-[#1A2B4C] font-extrabold py-3 rounded-xl border-2 border-[#1A2B4C] shadow-md transition">
+          Submit Order & Send Receipt
         </button>
       </form>
     </div>
   </main>
 
   <script>
+    // --- EMAILJS CONFIGURATION ---
+    const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY";
+    const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
+    const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    // --- FIREBASE CONFIGURATION ---
     const firebaseConfig = {
       apiKey: "AIzaSyBI4nMVadDvkUD3lhvwkeIEjWO2vhZQV3M",
       authDomain: "pos-app-7c542.firebaseapp.com",
@@ -87,23 +104,52 @@
     const db = firebase.firestore();
 
     let chosenDrink = '';
+    let drinkType = '';
     let chosenSize = 'Medium';
 
-    function selectDrink(drink) {
+    // Pricing Structure
+    const PRICE_MAP = {
+      lemonade_regular: { Small: 1.00, Medium: 1.75, Large: 4.00 },
+      lemonade_strawberry: { Small: 1.50, Medium: 2.00, Large: 4.50 },
+      milkshake: { Small: 3.50, Medium: 4.50, Large: 5.50 }
+    };
+
+    function calculatePrice() {
+      if (!drinkType || !chosenSize) return "0.00";
+      return PRICE_MAP[drinkType][chosenSize].toFixed(2);
+    }
+
+    function updateTotalPrice() {
+      const total = calculatePrice();
+      document.getElementById('priceDisplay').innerText = `$${total}`;
+    }
+
+    function selectDrink(drink, type) {
       chosenDrink = drink;
+      drinkType = type;
       document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
       event.target.classList.add('bg-[#1A2B4C]', 'text-[#F5F0E1]');
+      updateTotalPrice();
     }
 
     function selectSize(size) {
       chosenSize = size;
       document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
       event.target.classList.add('bg-[#1A2B4C]', 'text-[#F5F0E1]');
+      updateTotalPrice();
     }
 
     document.getElementById('posForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!chosenDrink) { alert('Please select a drink!'); return; }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerText = "Sending Order...";
+      submitBtn.disabled = true;
+
+      const customerName = document.getElementById('customerName').value;
+      const customerEmail = document.getElementById('customerEmail').value;
+      const totalPrice = calculatePrice();
 
       try {
         const ordersRef = db.collection('orders');
@@ -113,23 +159,44 @@
           nextNum = 101 + snapshot.size;
         }
 
+        // Save order to Firestore Database
         await ordersRef.add({
           orderNumber: nextNum,
-          customerName: document.getElementById('customerName').value,
-          customerEmail: document.getElementById('customerEmail').value,
+          customerName: customerName,
+          customerEmail: customerEmail,
           drink: chosenDrink,
           size: chosenSize,
+          price: `$${totalPrice}`,
           status: 'Pending',
           timestamp: Date.now()
         });
 
-        alert(`Order #${nextNum} sent to Kitchen!`);
+        // Send Email Receipt via EmailJS
+        if (EMAILJS_PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: customerEmail,
+            customer_name: customerName,
+            order_number: nextNum,
+            drink_name: chosenDrink,
+            drink_size: chosenSize,
+            total_price: `$${totalPrice}`
+          });
+          alert(`Order #${nextNum} ($${totalPrice}) sent to Kitchen & Email Receipt Sent!`);
+        } else {
+          alert(`Order #${nextNum} ($${totalPrice}) sent to Kitchen!`);
+        }
+
         document.getElementById('posForm').reset();
         chosenDrink = '';
+        drinkType = '';
+        updateTotalPrice();
         document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
       } catch (err) {
-        alert('Error submitting order. Check browser console for details.');
+        alert('Error submitting order. Check browser console.');
         console.error(err);
+      } finally {
+        submitBtn.innerText = "Submit Order & Send Receipt";
+        submitBtn.disabled = false;
       }
     });
   </script>
