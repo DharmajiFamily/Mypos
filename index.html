@@ -107,28 +107,28 @@
 
       try {
         const ordersRef = db.collection('orders');
-        const snapshot = await ordersRef.orderBy('orderNumber', 'desc').limit(1).get();
-        let lastNum = 100;
+        const snapshot = await ordersRef.get();
+        let nextNum = 101;
         if (!snapshot.empty) {
-          lastNum = snapshot.docs[0].data().orderNumber || 100;
+          nextNum = 101 + snapshot.size;
         }
 
         await ordersRef.add({
-          orderNumber: lastNum + 1,
+          orderNumber: nextNum,
           customerName: document.getElementById('customerName').value,
           customerEmail: document.getElementById('customerEmail').value,
           drink: chosenDrink,
           size: chosenSize,
           status: 'Pending',
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          timestamp: Date.now()
         });
 
-        alert(`Order #${lastNum + 1} sent to Kitchen!`);
+        alert(`Order #${nextNum} sent to Kitchen!`);
         document.getElementById('posForm').reset();
         chosenDrink = '';
         document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
       } catch (err) {
-        alert('Error submitting order. Make sure Firestore Database is enabled in Test Mode!');
+        alert('Error submitting order. Check browser console for details.');
         console.error(err);
       }
     });
