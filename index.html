@@ -75,14 +75,13 @@
   </main>
 
   <script>
-    // Paste your Firebase Config keys here
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
+      apiKey: "AIzaSyBI4nMVadDvkUD3lhvwkeIEjWO2vhZQV3M",
+      authDomain: "pos-app-7c542.firebaseapp.com",
+      projectId: "pos-app-7c542",
+      storageBucket: "pos-app-7c542.firebasestorage.app",
+      messagingSenderId: "616852048734",
+      appId: "1:616852048734:web:09841b675861276d429dcf"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -106,28 +105,32 @@
       e.preventDefault();
       if (!chosenDrink) { alert('Please select a drink!'); return; }
 
-      // Get next order number
-      const ordersRef = db.collection('orders');
-      const snapshot = await ordersRef.orderBy('orderNumber', 'desc').limit(1).get();
-      let lastNum = 100;
-      if (!snapshot.empty) {
-        lastNum = snapshot.docs[0].data().orderNumber || 100;
+      try {
+        const ordersRef = db.collection('orders');
+        const snapshot = await ordersRef.orderBy('orderNumber', 'desc').limit(1).get();
+        let lastNum = 100;
+        if (!snapshot.empty) {
+          lastNum = snapshot.docs[0].data().orderNumber || 100;
+        }
+
+        await ordersRef.add({
+          orderNumber: lastNum + 1,
+          customerName: document.getElementById('customerName').value,
+          customerEmail: document.getElementById('customerEmail').value,
+          drink: chosenDrink,
+          size: chosenSize,
+          status: 'Pending',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert(`Order #${lastNum + 1} sent to Kitchen!`);
+        document.getElementById('posForm').reset();
+        chosenDrink = '';
+        document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
+      } catch (err) {
+        alert('Error submitting order. Make sure Firestore Database is enabled in Test Mode!');
+        console.error(err);
       }
-
-      await ordersRef.add({
-        orderNumber: lastNum + 1,
-        customerName: document.getElementById('customerName').value,
-        customerEmail: document.getElementById('customerEmail').value,
-        drink: chosenDrink,
-        size: chosenSize,
-        status: 'Pending',
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-      alert(`Order #${lastNum + 1} sent to Kitchen!`);
-      document.getElementById('posForm').reset();
-      chosenDrink = '';
-      document.querySelectorAll('.drink-btn').forEach(btn => btn.classList.remove('bg-[#1A2B4C]', 'text-[#F5F0E1]'));
     });
   </script>
 </body>
